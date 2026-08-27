@@ -124,11 +124,11 @@ without asking:
 Declining costs nothing; it asks again the next time you start the app. A failed check
 (no connection, GitHub unreachable) is ignored silently rather than interrupting you.
 
-> **Updating from v0.2.4 or older.** Downloads used to live in the source repository.
-> Builds from v0.2.5 onward look here instead, and older installs are offered v0.2.5 from
-> the old location one last time to make the switch. If your app is older than v0.2.5 and
-> has stopped finding updates, download v0.2.5 or newer from this page by hand once; it
-> will keep itself current after that.
+> **Updating from v0.2.4 or older.** Downloads used to live in a different repository,
+> which is no longer public. Builds older than v0.2.5 look for updates there and will
+> never find them — and a failed check is silent by design, so there is no error to see,
+> just a prompt that never comes. Download v0.2.5 or newer from this page by hand once;
+> it keeps itself current from then on.
 
 ### Desktop — macOS, by hand
 
