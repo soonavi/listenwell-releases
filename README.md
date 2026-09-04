@@ -31,7 +31,7 @@ live in your ListenWell account, so everything follows you between them.
 
 ### Web — nothing to install
 
-Open **[listen-well-eight.vercel.app](https://listen-well-eight.vercel.app)** and sign in
+Open **[listen-well-eight.vercel.app](https://listenwell.lol)** and sign in
 or create an account with an email and password. This is always the newest build.
 
 ### Desktop — Windows, macOS, Linux
