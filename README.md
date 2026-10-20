@@ -7,7 +7,7 @@ than rent it. There is no catalog and nothing to discover — you upload your ow
 files, they are stored privately in your account, and you play them from any device
 through an interface built for control rather than engagement.
 
-### ⬇️ [Open the web app](https://listen-well-eight.vercel.app) · [Download the desktop app](https://github.com/soonavi/listenwell-releases/releases/latest)
+### ⬇️ [Open the web app](https://listenwell.lol) · [Try the demo](https://listenwell.lol/demo) · [Download the desktop app](https://github.com/soonavi/listenwell-releases/releases/latest)
 
 ---
 
@@ -19,8 +19,8 @@ plus the `latest*.yml` feeds the in-app updater polls.
 **There is no source code here.** This repository exists so the update feed can stay
 public while the application source is private — a private repository's release assets
 are private too, and the updater fetches them anonymously with no token. Releases are
-published automatically when a `v*` tag is pushed in the source repository. Nothing here
-is meant to be edited by hand.
+published automatically by the source repository's release workflow, which creates the
+`v*` tag here. Nothing here is meant to be edited by hand.
 
 ---
 
@@ -31,8 +31,12 @@ live in your ListenWell account, so everything follows you between them.
 
 ### Web — nothing to install
 
-Open **[listen-well-eight.vercel.app](https://listenwell.lol)** and sign in
+Open **[listenwell.lol](https://listenwell.lol)** and sign in
 or create an account with an email and password. This is always the newest build.
+
+To look around first, open **[listenwell.lol/demo](https://listenwell.lol/demo)**: the same app,
+signed in to a sample library of public-domain music, running entirely in your browser. Nothing
+you do there is saved or sent anywhere, and it leaves an account you already have alone.
 
 ### Desktop — Windows, macOS, Linux
 
@@ -43,9 +47,10 @@ built-in updater and you can ignore them.
 
 | Your machine | Download | Size |
 | --- | --- | --- |
-| Windows 10/11 (64-bit) | `ListenWell.Setup.<version>.exe` | ~108 MB |
-| Mac with Apple Silicon (M1 or later) | `ListenWell-<version>-arm64.dmg` | ~128 MB |
-| Linux (any distro, x86-64) | `ListenWell-<version>.AppImage` | ~141 MB |
+| Windows 10/11 (64-bit) | `ListenWell-Setup-<version>.exe` | ~108 MB |
+| Mac with Apple Silicon (M1 or later) | `ListenWell-<version>-arm64.dmg` | ~116 MB |
+| Debian / Ubuntu / Mint (x86-64) | `listenwell_<version>_amd64.deb` | ~97 MB |
+| Any other Linux (x86-64) | `ListenWell-<version>.AppImage` | ~123 MB |
 
 The `latest*.yml` and `.blockmap` files are how the app finds and downloads its own
 updates. You never need to download them by hand.
@@ -68,16 +73,26 @@ xattr -dr com.apple.quarantine /Applications/ListenWell.app
 > **Intel Macs are not covered.** The release builds Apple Silicon (`arm64`) only. On an
 > Intel Mac, use the web app.
 
-**Linux.** An AppImage needs no installation — mark it executable and run it:
+**Linux — Debian, Ubuntu, Mint.** Take the `.deb`. It installs normally, needs no FUSE
+library, and updates itself through the app afterwards:
+
+```bash
+sudo dpkg -i listenwell_<version>_amd64.deb
+```
+
+**Linux — everything else.** An AppImage needs no installation — mark it executable and
+run it:
 
 ```bash
 chmod +x ListenWell-<version>.AppImage
 ./ListenWell-<version>.AppImage
 ```
 
-Some distributions need FUSE 2 for AppImages (`sudo apt install libfuse2` on Debian and
-Ubuntu). Failing that, `./ListenWell-<version>.AppImage --appimage-extract-and-run` works
-without it.
+The AppImage runtime needs FUSE 2, which Ubuntu 24.04 and current Fedora no longer install
+by default — so on a stock modern desktop it will not start until you add it
+(`sudo apt install libfuse2t64`, or `libfuse2` on older releases). Failing that,
+`./ListenWell-<version>.AppImage --appimage-extract-and-run` works without it. On Debian
+and Ubuntu the `.deb` avoids this entirely.
 
 **All three** need an internet connection, because your library lives in your account
 rather than on the machine.
@@ -112,17 +127,19 @@ than backgrounding it) and reopen it.
 
 ### Desktop — Windows and Linux, on a prompt
 
-The desktop app checks for updates **once, at launch**, and never downloads anything
-without asking:
+The desktop app checks for updates at launch and every few hours while it is open, and
+never downloads anything without asking:
 
 1. If a newer version exists, a dialog offers **Download** or **Not now**.
 2. Choose Download and it fetches in the background — only the changed chunks, not the
    whole installer, because of those `.blockmap` files.
-3. When it finishes, a second dialog offers **Restart now** or **Later**. Choosing Later
-   installs the update the next time you quit.
+3. When it finishes, a second dialog offers **Restart now** or **Later**. Both install
+   quietly; Later just waits until you next quit.
 
-Declining costs nothing; it asks again the next time you start the app. A failed check
-(no connection, GitHub unreachable) is ignored silently rather than interrupting you.
+Declining costs nothing; it asks again on the next check. An automatic check that fails
+(no connection, GitHub unreachable) does not interrupt you — but it is not invisible:
+**Settings → Account** shows the version you are running, what the last check found, and a
+**Check for updates** button that reports the result either way, errors included.
 
 > **Updating from v0.2.4 or older.** Downloads used to live in a different repository,
 > which is no longer public. Builds older than v0.2.5 look for updates there and will
@@ -132,9 +149,11 @@ Declining costs nothing; it asks again the next time you start the app. A failed
 
 ### Desktop — macOS, by hand
 
-**macOS is the exception: the in-app updater cannot update this app.** Applying an update
-on macOS requires a valid code signature, and these builds are unsigned. The check runs
-and fails quietly, so you will not see an error — you will simply never be prompted.
+**macOS is the exception: the app cannot install its own updates.** Applying an update on
+macOS goes through Squirrel.Mac, which validates the new version against the running app's
+code signature — and these builds are unsigned, so that check can never pass. The app still
+tells you when a new version exists; the dialog takes you to the download page rather than
+offering an install that would not work.
 
 To update a Mac, download the new `.dmg` from the
 [latest release](https://github.com/soonavi/listenwell-releases/releases/latest) and drag
